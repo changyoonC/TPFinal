@@ -17,61 +17,85 @@ public class Enemy : MonoBehaviour
     public GameObject bulletParent;
     public float moveSpeed = 3f;
     public Animator anim;
+    public float isFlying = 0;
 
     private Vector3 startingPosition;
 
+
+
+    public float maxDistance = 10f;
+    private Rigidbody2D rb;
 
     void Start()
     {
         currentHP = maxHP;
         startingPosition = transform.position;
+        rb = GetComponent<Rigidbody2D>();
+        
     }
 
     void Update()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        float distanceToStartingPos = Vector3.Distance(transform.position, startingPosition);
-
-        if (distanceToPlayer <= followDistance && distanceToPlayer > shootingRange)
+        if (isFlying == 0)
         {
-            // 플레이어 따라가기
-            Vector3 direction = (player.position - transform.position).normalized;
-            transform.position += direction * moveSpeed * Time.deltaTime;
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            float distanceToStartingPos = Vector3.Distance(transform.position, startingPosition);
 
-            // 방향을 플레이어 방향으로 뒤집기
-            if (player.position.x < transform.position.x)
-                transform.localScale = new Vector3(1f, 1f, 1f);
+            if (distanceToPlayer <= followDistance && distanceToPlayer > shootingRange)
+            {
+                // 플레이어 따라가기
+                Vector3 direction = (player.position - transform.position).normalized;
+                transform.position += direction * moveSpeed * Time.deltaTime;
+
+                // 방향을 플레이어 방향으로 뒤집기
+                if (player.position.x < transform.position.x)
+                    transform.localScale = new Vector3(1f, 1f, 1f);
+                else
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+
+                anim.SetBool("isWalk", true);
+                anim.SetBool("Attack", false);
+            }
+            else if (distanceToPlayer <= shootingRange && nextFireTime < Time.time)
+            {
+                Instantiate(bullet, bulletParent.transform.position, Quaternion.identity);
+                nextFireTime = Time.time + fireRate;
+                anim.SetBool("Attack", true);
+                anim.SetBool("isWalk", false);
+            }
+            else if (distanceToStartingPos > returnDistance)
+            {
+                // 돌아가기
+                Vector3 direction = (startingPosition - transform.position).normalized;
+                transform.position += direction * moveSpeed * Time.deltaTime;
+
+                // 방향을 시작 위치 방향으로 뒤집기
+                if (startingPosition.x < transform.position.x)
+                    transform.localScale = new Vector3(1f, 1f, 1f);
+                else
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+
+                anim.SetBool("isWalk", true);
+                anim.SetBool("Attack", false);
+            }
             else
-                transform.localScale = new Vector3(-1f, 1f, 1f);
-
-            anim.SetBool("isWalk", true);
-            anim.SetBool("Attack", false);
+            {
+                anim.SetBool("isWalk", false);
+            }
         }
-        else if (distanceToPlayer <= shootingRange && nextFireTime < Time.time)
-        {
-            Instantiate(bullet, bulletParent.transform.position, Quaternion.identity);
-            nextFireTime = Time.time + fireRate;
-            anim.SetBool("Attack", true);
-            anim.SetBool("isWalk", false);
-        }
-        else if (distanceToStartingPos > returnDistance)
-        {
-            // 돌아가기
-            Vector3 direction = (startingPosition - transform.position).normalized;
-            transform.position += direction * moveSpeed * Time.deltaTime;
 
-            // 방향을 시작 위치 방향으로 뒤집기
-            if (startingPosition.x < transform.position.x)
-                transform.localScale = new Vector3(1f, 1f, 1f);
-            else
-                transform.localScale = new Vector3(-1f, 1f, 1f);
-
-            anim.SetBool("isWalk", true);
-            anim.SetBool("Attack", false);
-        }
-        else
+        if(isFlying == 1)
         {
-            anim.SetBool("isWalk", false);
+            
+            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+
+            if (distanceToPlayer <= maxDistance)
+            {
+                Vector2 direction = (player.position - transform.position).normalized;
+                rb.AddForce(direction * moveSpeed, ForceMode2D.Force);
+
+            }
         }
     }
 
