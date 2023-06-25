@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rigid;
     Animator anim;
 
-
+    public float pushForce=1;
     public Transform groundChkFront;  // 바닥 체크 position 
     public Transform groundChkBack;   // 바닥 체크 position 
     public Transform WallChk;
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
         anim.SetBool("isSliding", isWall);//캐릭터가 벽에있을때 slide  하는 조건
 
         // 공격
-        if (Input.GetKeyDown(KeyCode.Z) && canAttack&& hasWeaponSword&&hasWeaponSword)
+        if (Input.GetKeyDown(KeyCode.Z) && canAttack && hasWeaponSword && hasWeaponSword && isGround)
         {
             Attack();
         }
@@ -250,5 +250,33 @@ void FlipPlayer()
         Gizmos.color = Color.red;
         Gizmos.DrawRay(groundChkFront.position, Vector2.down * chkDistance);
         Gizmos.DrawRay(groundChkBack.position, Vector2.down * chkDistance);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Monster"))
+        {
+            // 플레이어가 "Monster" 태그를 가진 몬스터에 닿았을 때 밀려나는 방향 계산
+            Vector2 pushDirection = transform.position - collision.transform.position;
+            pushDirection.Normalize();
+
+            // 플레이어를 밀어내는 힘을 적용
+            rigid.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
+
+            //플레이어 조종 비활성화를 Delay 시켜야함
+            StartCoroutine(DisablePlayerControl(1.0f));
+        }
+    }
+    IEnumerator DisablePlayerControl(float duration)
+    {
+        // 플레이어 조종 비활성화
+        isdash = false;
+        canAttack = false;
+
+        yield return new WaitForSeconds(duration);
+
+        // 히트 모션이 끝난 후에 다시 플레이어 조종 활성화
+        isdash = true;
+        canAttack = true;
     }
 }
