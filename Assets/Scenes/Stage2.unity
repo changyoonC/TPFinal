@@ -1087,11 +1087,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4848876789478077874, guid: 9e7d2ae735018734c9edf6afb9c4438d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.29
+      value: -8.26
       objectReference: {fileID: 0}
     - target: {fileID: 4848876789478077874, guid: 9e7d2ae735018734c9edf6afb9c4438d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2
+      value: 2.91
       objectReference: {fileID: 0}
     - target: {fileID: 4848876789478077874, guid: 9e7d2ae735018734c9edf6afb9c4438d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1628,6 +1628,7 @@ MonoBehaviour:
     m_Bits: 64
   isJump: 0
   dashSpeed: 30
+  isSword: 1
   maxHP: 0
   currentHP: 0
   attackRange: 1

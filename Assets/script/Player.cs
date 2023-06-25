@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public LayerMask w_Layer;
     public bool isJump;
     public float dashSpeed;
+    public bool isSword;
 
 
     //기본 공격용 변수
@@ -65,6 +66,14 @@ public class Player : MonoBehaviour
     void Update()
     {
         input_x = Input.GetAxis("Horizontal");
+        if (isSword == true)
+        {
+            hasWeaponSword = true;
+        }
+        if(hasWeaponSword == true)
+        {
+            isSword = true;
+        }
 
         // 캐릭터의 앞쪽과 뒤쪽의 바닥 체크를 진행
         bool ground_front = Physics2D.Raycast(groundChkFront.position, Vector2.down, chkDistance, g_Layer);
