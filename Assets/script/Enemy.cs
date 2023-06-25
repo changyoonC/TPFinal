@@ -95,6 +95,12 @@ public class Enemy : MonoBehaviour
                 Vector2 direction = (player.position - transform.position).normalized;
                 rb.AddForce(direction * moveSpeed, ForceMode2D.Force);
 
+                if (player.position.x < transform.position.x)
+                    transform.localScale = new Vector3(1f, 1f, 1f);
+                else
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+                anim.SetBool("isMove", true);
+
             }
         }
     }
