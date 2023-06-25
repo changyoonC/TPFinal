@@ -103,6 +103,34 @@ public class Enemy : MonoBehaviour
 
             }
         }
+
+        if (isFlying == 2)
+        {
+
+            float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+
+
+            if (distanceToPlayer <= followDistance && distanceToPlayer > shootingRange)
+            {
+                Vector3 direction = (player.position - transform.position).normalized;
+                transform.position += direction * moveSpeed * Time.deltaTime;
+
+                if (player.position.x < transform.position.x)
+                    transform.localScale = new Vector3(1f, 1f, 1f);
+                else
+                    transform.localScale = new Vector3(-1f, 1f, 1f);
+                anim.SetBool("isMove", true);
+                anim.SetBool("isAttack", false);
+
+            }
+            else if (distanceToPlayer <= shootingRange && nextFireTime < Time.time)
+            {
+                Instantiate(bullet, bulletParent.transform.position, Quaternion.identity);
+                nextFireTime = Time.time + fireRate;
+                anim.SetBool("isMove", false);
+                anim.SetBool("isAttack", true);
+            }
+        }
     }
 
 
