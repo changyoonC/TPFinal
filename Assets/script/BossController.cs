@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BossController : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class BossController : MonoBehaviour
     private float chargeTime;
     private float isRight=1;
     private float currentChargeTime;
+    public int maxHP;
+    public int currHP;
 
     // 점프 기능 구현
     public LayerMask g_Layer;
@@ -76,14 +79,19 @@ public class BossController : MonoBehaviour
         timeSinceLastShoot = shootDelay;
         patternDuration = Random.Range(2f, 5f);
         idleDuration = Random.Range(1f, 3f);
-
+        currHP = maxHP;
         currentState = BossState.Idle;
     }
 
     private void FixedUpdate()
     {
         timeSinceLastShoot += Time.fixedDeltaTime;
+        if (Input.GetKey(KeyCode.P))
+        {
 
+
+            HPminus();
+        }
         switch (currentState)
         {
             case BossState.NormalChase:
@@ -207,6 +215,10 @@ public class BossController : MonoBehaviour
 
         patternDuration -= Time.fixedDeltaTime;
         chargeTime -= Time.fixedDeltaTime;
+        if (currHP <= 0)
+        {
+            SceneManager.LoadScene("Ending");
+        }
     }
 
 
@@ -232,7 +244,10 @@ public class BossController : MonoBehaviour
         }
     }
 
-
+    public void HPminus()
+    {
+        currHP -= 1;
+    }
     private void Move()
     {
         rb.velocity = currentDirection * moveSpeed;
