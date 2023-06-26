@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public LayerMask w_Layer;
     public bool isJump;
     public float dashSpeed;
+    bool isAttacking;
 
 
     //기본 공격용 변수
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour
     public LayerMask enemyLayer;  // 적 캐릭터를 포함하는 레이어
     private bool canAttack = true;//공격 쿨다운 끝나고 가능
     public float cooldownTime = 1;//공격 쿨다운용
+    private bool isAttack; //공격 애니메이션용
 
     public int attackDamage;  // 플레이어의 공격 데미지
     public static bool hasWeaponSword;
@@ -60,6 +62,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         currentHP = maxHP;
+        isAttacking = false;
     }
 
     void Update()
@@ -88,6 +91,7 @@ public class Player : MonoBehaviour
         // 공격
         if (Input.GetKeyDown(KeyCode.Z) && canAttack && hasWeaponSword && hasWeaponSword && isGround)
         {
+            anim.SetTrigger("atk");
             Attack();
         }
 
@@ -188,22 +192,27 @@ public class Player : MonoBehaviour
     }
     void Attack()
     {
-        // 공격을 수행
-        anim.SetTrigger("attack");
-        canAttack = false;
+        
+            // 공격을 수행
+            isAttacking = true;
 
-        // 공격 범위 내에 있는 적을 감지
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, attackRange, enemyLayer);
 
-        // 적에게 데미지를 입힘
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            // 적이 Enemy라는 스크립트를 가지고 있다고 가정하고 TakeDamage() 메서드를 호출합니다.
-            enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+            anim.SetBool("attack", isAttacking);
+            canAttack = false;
+
+            // 공격 범위 내에 있는 적을 감지
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, attackRange, enemyLayer);
+
+            // 적에게 데미지를 입힘
+            foreach (Collider2D enemy in hitEnemies)
+            {
+                // 적이 Enemy라는 스크립트를 가지고 있다고 가정하고 TakeDamage() 메서드를 호출합니다.
+                enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
+            }
+            // 공격이 끝나면 일정 시간 후에 다시 공격할 수 있도록 코루틴을 시작
+            StartCoroutine(ResetAttack());
+        
         }
-        // 공격이 끝나면 일정 시간 후에 다시 공격할 수 있도록 코루틴을 시작
-        StartCoroutine(ResetAttack());
-    }
     IEnumerator ResetAttack()
     {
         // 일정 시간 동안 대기합니다.
@@ -211,6 +220,7 @@ public class Player : MonoBehaviour
 
         // 공격 가능 상태로 변경합니다.
         canAttack = true;
+        isAttacking = false;
     }
 
 
@@ -254,7 +264,7 @@ void FlipPlayer()
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Monster"))
+        if (collision.CompareTag("Enemy"))
         {
             // 플레이어가 "Monster" 태그를 가진 몬스터에 닿았을 때 밀려나는 방향 계산
             Vector2 pushDirection = transform.position - collision.transform.position;

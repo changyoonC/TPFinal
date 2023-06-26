@@ -20,6 +20,13 @@ public class BossController : MonoBehaviour
     public float landingSpeed = -10f;//점프 아래로 가는 속도
     public float floatingSpeed = 3f;//뜨는속도
 
+    //애니메이션용 변수
+    bool isMove;
+    bool isP1;
+    bool isP2;
+    bool isP3;
+    bool isIdle;
+
     public Transform player;
     public GameObject projectilePrefab;
     public Transform projectileSpawnPoint;
@@ -33,6 +40,15 @@ public class BossController : MonoBehaviour
     private float patternDuration;
     private float idleTime;
     private float idleDuration;
+
+
+    //애니메이션 호출
+    private readonly string animParamMove = "isMove";
+    private readonly string animParamPattern1 = "isPattern1";
+    private readonly string animParamPattern2 = "isPattern2";
+    private readonly string animParamPattern3 = "isPattern3";
+    private readonly string animParamIdle = "isIdle";
+
 
     public float airMovementSpeed = 5f; // 공중에서의 이동 속도
     public float gravityScale = 2f; // 아래로의 중력 스케일
@@ -78,6 +94,8 @@ public class BossController : MonoBehaviour
                     // 패턴 전환 쿨타임이 지나지 않았으면 리턴하여 패턴 전환을 막음
                     if (patternChangeTimer > 0f)
                     {
+                        isMove = true;
+                        animator.SetBool("isMove", isMove);
                         patternChangeTimer -= Time.fixedDeltaTime;
                         return;
                     }
@@ -91,6 +109,8 @@ public class BossController : MonoBehaviour
                             currentState = BossState.AttackPattern1;
                             patternDuration = 2;
                             idleDuration = 3;
+                            isP1 = true;
+                            animator.SetBool("isP1", isP1);
                         }
                         else if (randomPattern == 2)
                         {
@@ -98,13 +118,19 @@ public class BossController : MonoBehaviour
                             patternDuration = 2;
                             chargeTime = 1.5f;
                             idleDuration = 3;
+                            isP2 = true;
+                            animator.SetBool("isP2", isP2);
+
                         }
                         else if (randomPattern == 3) // 패턴 3 추가
                         {
                             currentState = BossState.AttackPattern3;
                             isJumping = true;
                             patternDuration = 6;
-                          
+                            isP3 = true;
+                            animator.SetBool("isP3", isP3);
+
+
                             idleDuration = 3;
                         }
 
@@ -129,8 +155,10 @@ public class BossController : MonoBehaviour
                 }
                 else
                 {
+                    allboolfalse();
                     StopMoving();
                     ChangeDirection();
+
                 }
                 break;
             case BossState.AttackPattern1:
@@ -288,7 +316,15 @@ public class BossController : MonoBehaviour
         //뜨기 1초 기다리기
         StartCoroutine(LandAfterDelay());
     }
-
+    private void allboolfalse()
+    {
+        isP1 = false;
+        isP2 = false;
+        isP3 = false;
+        animator.SetBool("isP1", isP1);
+        animator.SetBool("isP2", isP2);
+        animator.SetBool("isP3", isP3);
+    }
     private IEnumerator LandAfterDelay()
     {
         yield return new WaitForSeconds(1f);
