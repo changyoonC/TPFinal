@@ -7,6 +7,9 @@ public class BulletControllerBoss : MonoBehaviour
     public float speed = 10f;
     private Vector2 direction;
     private Vector3 initialScale;
+    GameObject target;
+    Rigidbody2D bulletRB;
+    public GameObject player;
 
     // Set the bullet's direction
     public void SetDirection(Vector2 dir)
@@ -16,30 +19,34 @@ public class BulletControllerBoss : MonoBehaviour
 
     private void Start()
     {
-        // Store the initial scale of the object
+        bulletRB = GetComponent<Rigidbody2D>();
         initialScale = transform.localScale;
+        target = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void Update()
     {
-        // Move the bullet in the specified direction
+        
         transform.Translate(direction * speed * Time.deltaTime);
 
-        // Flip the sprite if the direction is negative along the x-axis
+        
         if (direction.x < 0)
         {
-            // Set the local scale of the transform to flip the image
+            
             transform.localScale = new Vector3(-initialScale.x, initialScale.y, initialScale.z);
         }
         else if (direction.x > 0)
-        {
-            // Reset the local scale if the direction is positive along the x-axis
+        {   
             transform.localScale = initialScale;
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        // Handle collision logic here
+        if (other.gameObject.name == "player")
+        {
+            target.GetComponent<Player>().TakeDamage(1);
+            Destroy(gameObject);
+        }
     }
 }

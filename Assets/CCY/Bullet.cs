@@ -23,11 +23,7 @@ public class Bullet : MonoBehaviour
             transform.localScale = new Vector3(-1f, 1f, 1f);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  
 
     private void OnCollisionEnter2D(Collision2D other)
     {
