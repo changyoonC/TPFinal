@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -228,6 +229,7 @@ public class Player : MonoBehaviour
     void GameOver()
     {
         // 게임 오버 로직을 처리합니다. 예를 들어 게임 오버 화면을 표시하거나 레벨을 재시작할 수 있습니다.
+        SceneManager.LoadScene("EndingScene");
     }
     private void OnDrawGizmosSelected()//공격범위 표시
     { 
