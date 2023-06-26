@@ -8,7 +8,7 @@ public class PlayTimeUI : MonoBehaviour
     public Text playTimeText;
 
     private void Update()
-    {
+    {       
         if (playTimeText != null)
         {
             float playTime = playTimeCheck.Instance.GetPlayTime();

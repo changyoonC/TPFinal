@@ -102,7 +102,7 @@ public class BossController : MonoBehaviour
                     else
                     {
 
-                        int randomPattern = Random.Range(3, 4); // 패턴 3 추가
+                        int randomPattern = Random.Range(1, 4); // 패턴 3 추가
 
                         if (randomPattern == 1)
                         {
