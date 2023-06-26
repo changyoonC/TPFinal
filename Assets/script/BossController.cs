@@ -102,15 +102,14 @@ public class BossController : MonoBehaviour
                     else
                     {
 
-                        int randomPattern = Random.Range(1, 4); // 패턴 3 추가
+                        int randomPattern = Random.Range(1, 2); // 패턴 3 추가
 
                         if (randomPattern == 1)
                         {
                             currentState = BossState.AttackPattern1;
                             patternDuration = 2;
                             idleDuration = 3;
-                            isP1 = true;
-                            animator.SetBool("isP1", isP1);
+                            animator.SetTrigger("isP1");
                         }
                         else if (randomPattern == 2)
                         {
@@ -118,17 +117,15 @@ public class BossController : MonoBehaviour
                             patternDuration = 2;
                             chargeTime = 1.5f;
                             idleDuration = 3;
-                            isP2 = true;
-                            animator.SetBool("isP2", isP2);
+                            animator.SetTrigger("isP2");
 
                         }
                         else if (randomPattern == 3) // 패턴 3 추가
                         {
                             currentState = BossState.AttackPattern3;
                             isJumping = true;
-                            patternDuration = 6;
-                            isP3 = true;
-                            animator.SetBool("isP3", isP3);
+                            patternDuration = 4;
+                            animator.SetTrigger("isP3");
 
 
                             idleDuration = 3;
@@ -155,7 +152,7 @@ public class BossController : MonoBehaviour
                 }
                 else
                 {
-                    allboolfalse();
+                    animator.SetBool("isMove", false);
                     StopMoving();
                     ChangeDirection();
 
@@ -315,15 +312,6 @@ public class BossController : MonoBehaviour
 
         //뜨기 1초 기다리기
         StartCoroutine(LandAfterDelay());
-    }
-    private void allboolfalse()
-    {
-        isP1 = false;
-        isP2 = false;
-        isP3 = false;
-        animator.SetBool("isP1", isP1);
-        animator.SetBool("isP2", isP2);
-        animator.SetBool("isP3", isP3);
     }
     private IEnumerator LandAfterDelay()
     {

@@ -90,10 +90,11 @@ public class Player : MonoBehaviour
         anim.SetBool("isSliding", isWall);//캐릭터가 벽에있을때 slide  하는 조건
 
         // 공격
-        if (Input.GetKeyDown(KeyCode.Z) && canAttack && hasWeaponSword && hasWeaponSword && isGround)
+        if (Input.GetKey(KeyCode.Z) && canAttack && hasWeaponSword && isGround&&!isAttacking)
         {
-            anim.SetTrigger("atk");
+           
             Attack();
+            anim.SetTrigger("atk");
         }
 
 
@@ -218,7 +219,6 @@ public class Player : MonoBehaviour
     {
         // 일정 시간 동안 대기합니다.
         yield return new WaitForSeconds(cooldownTime);
-
         // 공격 가능 상태로 변경합니다.
         canAttack = true;
         isAttacking = false;

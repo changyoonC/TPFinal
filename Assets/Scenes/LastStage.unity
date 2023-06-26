@@ -10394,8 +10394,8 @@ MonoBehaviour:
   g_Layer:
     serializedVersion: 2
     m_Bits: 8
-  landingDashSpeed: 10
-  landingSpeed: -10
+  landingDashSpeed: 15
+  landingSpeed: -15
   floatingSpeed: 3
   player: {fileID: 1505723221}
   projectilePrefab: {fileID: 8356968289241049936, guid: 36af16868112d6749aa77c3d1f91fee8, type: 3}
