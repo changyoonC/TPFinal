@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     private bool isAttack; //공격 애니메이션용
 
     public int attackDamage;  // 플레이어의 공격 데미지
-    public static bool hasWeaponSword;
+    public static bool hasWeaponSword=true;
 
     //대쉬 체크용 변수들
     private bool isdash;
@@ -210,7 +210,8 @@ public class Player : MonoBehaviour
             {
                 // 적이 Enemy라는 스크립트를 가지고 있다고 가정하고 TakeDamage() 메서드를 호출합니다.
                 enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
-            }
+            enemy.GetComponent<BossController>().TakeDamage(attackDamage);
+        }
             // 공격이 끝나면 일정 시간 후에 다시 공격할 수 있도록 코루틴을 시작
             StartCoroutine(ResetAttack());
         

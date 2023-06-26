@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BossController : MonoBehaviour
 {
+    public int maxHP;  // 적의 최대 체력
+    private int currentHP;  // 적의 현재 체력
     public float moveSpeed = 5f;
     public float followRange = 10f;
     public float chargeSpeed = 1f;
@@ -102,7 +104,7 @@ public class BossController : MonoBehaviour
                     else
                     {
 
-                        int randomPattern = Random.Range(1, 2); // 패턴 3 추가
+                        int randomPattern = Random.Range(1, 4); // 패턴 3 추가
 
                         if (randomPattern == 1)
                         {
@@ -301,6 +303,24 @@ public class BossController : MonoBehaviour
             currentState = BossState.Idle;
             currentChargeTime = 0;
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHP -= damage;  // 적의 체력을 데미지만큼 감소
+
+        // 적이 패배했는지 확인
+        if (currentHP <= 0)
+        {
+            // 적이 패배한 경우, 적의 사망 로직을 처리
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        // 적의 사망 로직을 처리
+        Destroy(gameObject);  // 적 오브젝트를 제거
     }
     private void JumpBackwards()
     {
