@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     private bool isAttack; //공격 애니메이션용
 
     public int attackDamage;  // 플레이어의 공격 데미지
-    public static bool hasWeaponSword=true;
+    public static bool hasWeaponSword=false;
 
     //대쉬 체크용 변수들
     private bool isdash;
