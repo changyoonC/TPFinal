@@ -7,7 +7,7 @@ public class TitleToStart : MonoBehaviour
 {
     public void loadScence()
     {
-        SceneManager.LoadScene("Stage1");
+        SceneManager.LoadScene("Tutorial");
     }
 
     public void loadTitle()
